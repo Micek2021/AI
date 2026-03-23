@@ -1,82 +1,60 @@
+from dataclasses import dataclass
+
 # GTFS Models
 
-class Agency:
-    def __init__(self, agency_id, agency_name, agency_url, agency_timezone, agency_phone, agency_email, agency_fare_url):
-        self.agency_id = agency_id
-        self.agency_name = agency_name
-        self.agency_url = agency_url
-        self.agency_timezone = agency_timezone
-        self.agency_phone = agency_phone
-        self.agency_email = agency_email
-        self.agency_fare_url = agency_fare_url
-        
-        
+#standardowe przystanek początkowy, przystanek końcowy, nazwa wykorzystanej linii, czar rozpoczęcia, czas zakończenia
+#błędów wartość minimalizowanego kryterium i czas potrzebny do obliczenia najkrótszej ścieżki
+#klasy zostały ograniczone do atrybutów potrzebnych do wykonania zadania
+@dataclass        
 class Route:
-    def __init__(self, route_id, agency_id, route_short_name, route_long_name, route_type, route_color, route_text_color):
-        self.route_id = route_id
-        self.agency_id = agency_id
-        self.route_short_name = route_short_name
-        self.route_long_name = route_long_name
-        self.route_type = route_type
-        self.route_color = route_color
-        self.route_text_color = route_text_color
-        
+    route_id: str 
+    route_short_name: str 
+    route_long_name: str 
+     
+
+@dataclass
 class Stop:
-    def __init__(self, stop_id, stop_code, stop_name, stop_desc,stop_lat, stop_lon, location_type, parent_station, platform_code):
-        self.stop_id = stop_id
-        self.stop_code = stop_code
-        self.stop_name = stop_name
-        self.stop_desc = stop_desc
-        self.stop_lat = stop_lat
-        self.stop_lon = stop_lon
-        self.location_type = location_type
-        self.parent_station = parent_station
-        self.platform_code = platform_code
+    stop_id: str 
+    stop_name: str 
+    stop_lat: float 
+    stop_lon: float 
+    location_type: int 
+    parent_station: str | None
+    platform_code: str | None
         
+@dataclass
 class Trip:
-    def __init__(self, route_id, service_id, trip_id, trip_headsign, direction_id, block_id):
-        self.route_id = route_id
-        self.service_id = service_id
-        self.trip_id = trip_id
-        self.trip_headsign = trip_headsign
-        self.direction_id = direction_id
-        self.block_id = block_id
-        
+    route_id: str 
+    service_id: str 
+    trip_id: str 
+    trip_headsign: str 
+            
+@dataclass
 class StopTime:
-    def __init__(self, trip_id, arrival_time, departure_time, stop_id, stop_sequence, stop_headsign, pickup_type, shape_dist_traveled):
-        self.trip_id = trip_id
-        self.arrival_time = arrival_time
-        self.departure_time = departure_time
-        self.stop_id = stop_id
-        self.stop_sequence = stop_sequence
-        self.stop_headsign = stop_headsign
-        self.pickup_type = pickup_type
-        self.shape_dist_traveled = shape_dist_traveled
-        
+    trip_id: str 
+    arrival_time: int 
+    departure_time: int 
+    stop_id: str 
+    stop_sequence: int 
+    pickup_type: int 
+
+@dataclass        
 class Calendar:
-    def __init__(self, service_id, monday, tuesday, wednesday, thursday, friday, saturday, sunday, start_date, end_date):
-        self.service_id = service_id
-        self.monday = monday
-        self.tuesday = tuesday
-        self.wednesday = wednesday
-        self.thursday = thursday
-        self.friday = friday
-        self.saturday = saturday
-        self.sunday = sunday
-        self.start_date = start_date
-        self.end_date = end_date
-        
+    service_id: str 
+    monday: bool 
+    tuesday: bool 
+    wednesday: bool 
+    thursday: bool 
+    friday: bool 
+    saturday: bool 
+    sunday: bool 
+    start_date: str 
+    end_date: str 
+
+@dataclass        
 class CalendarDate:
-    def __init__(self, service_id, date, exception_type):
-        self.service_id = service_id
-        self.date = date
-        self.exception_type = exception_type
-        
-class feed_info:
-    def __init__(self, feed_publisher_name, feed_publisher_url, feed_lang, feed_start_date, feed_end_date):
-        self.feed_publisher_name = feed_publisher_name
-        self.feed_publisher_url = feed_publisher_url
-        self.feed_lang = feed_lang
-        self.feed_start_date = feed_start_date
-        self.feed_end_date = feed_end_date
+    service_id: str 
+    date: str 
+    exception_type: int 
+
                       

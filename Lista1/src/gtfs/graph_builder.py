@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 from datetime import datetime
+from itertools import permutations
 from gtfs.models import Route, Stop, Trip, StopTime, Calendar, CalendarDate
 
 @dataclass
@@ -30,11 +31,33 @@ def is_service_active(service_id: str, date_str: str, calendars: dict[str, Calen
     
     return False
 
+
+def build_transfer_edges(stops: dict[str, Stop]) -> list[GraphEdge]:
+    platforms = {}
+    for stop in stops.values():
+        if stop.location_type == 0 and stop.parent_station:
+            if stop.parent_station not in platforms:
+                platforms[stop.parent_station] = []
+            platforms[stop.parent_station].append(stop.stop_id)
+    
+    transfer_edges = []
+    for parent, stop_ids in platforms.items():
+        for a, b in permutations(stop_ids, 2):
+            transfer_edges.append(GraphEdge(
+                start_stop_id=a,
+                end_stop_id=b,
+                departure_time=0,
+                arrival_time=0,
+                travel_time=0,
+                route_name="TRANSFER",
+                trip_id=""
+            ))
+    return transfer_edges
     
 
     
-def build_graph(routes: dict[str, Route], stops: dict[str, Stop], trips: dict[str, Trip], stop_times: dict[str, list[StopTime]], calendars: dict[str, Calendar], calendar_dates: dict[str, list[CalendarDate]], date_str: str) -> list[GraphEdge]:
-    graph = []
+def build_trip_edges(routes: dict[str, Route], stops: dict[str, Stop], trips: dict[str, Trip], stop_times: dict[str, list[StopTime]], calendars: dict[str, Calendar], calendar_dates: dict[str, list[CalendarDate]], date_str: str) -> list[GraphEdge]:
+    trip_edges = []
     
     for trip_id, trip in trips.items():
         if not is_service_active(trip.service_id, date_str, calendars, calendar_dates):
@@ -56,8 +79,14 @@ def build_graph(routes: dict[str, Route], stops: dict[str, Stop], trips: dict[st
                 route_name=route.route_short_name or route.route_long_name,
                 trip_id=trip_id
             )
-            graph.append(edge)
-    return graph
+            trip_edges.append(edge)        
+    return trip_edges
+
+def build_graph(routes: dict[str, Route], stops: dict[str, Stop], trips: dict[str, Trip], stop_times: dict[str, list[StopTime]], calendars: dict[str, Calendar], calendar_dates: dict[str, list[CalendarDate]], date_str: str) -> list[GraphEdge]:
+    trip_edges = build_trip_edges(routes, stops, trips, stop_times, calendars, calendar_dates, date_str)
+    transfer_edges = build_transfer_edges(stops)
+    return trip_edges + transfer_edges
+
    
 
 def convert_time(minutes: int) -> str:

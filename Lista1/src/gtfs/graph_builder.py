@@ -60,7 +60,7 @@ def resolve_stop(stop_id: str, stops: dict[str, Stop]) -> str:
         return stop.parent_station
     return stop_id
     
-def build_trip_edges(routes: dict[str, Route], stops: dict[str, Stop], trips: dict[str, Trip], stop_times: dict[str, list[StopTime]], calendars: dict[str, Calendar], calendar_dates: dict[str, list[CalendarDate]], date_str: str = '20260301') -> list[GraphEdge]:
+def build_trip_edges(routes: dict[str, Route], stops: dict[str, Stop], trips: dict[str, Trip], stop_times: dict[str, list[StopTime]], calendars: dict[str, Calendar], calendar_dates: dict[str, list[CalendarDate]], date_str: str) -> list[GraphEdge]:
     trip_edges = []
     
     for trip_id, trip in trips.items():

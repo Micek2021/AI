@@ -56,11 +56,6 @@ def resolve_stop_name(stop_name_or_id: str) -> str | None:
                 return stop_id
         return matches[0][0]
 
-def validate_stop(stop_id: str) -> bool:
-    if stop_id not in stops:
-        print(f"Przystanek '{stop_id}' nie istnieje")
-        return False
-    return True
 
 def run_dijkstra_mode(start_name: str, end_name: str, start_time: int, date_str: str):    
     start_id = resolve_stop_name(start_name)
